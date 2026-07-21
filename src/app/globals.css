@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Token semantici — canali RGB (compatibili con le opacità Tailwind) */
+    --background: 248 243 236; /* sand  #F8F3EC */
+    --surface: 255 255 255; /* paper #FFFFFF */
+    --foreground: 31 41 55; /* ink   #1F2937 */
+    --brand: 15 118 110; /* teal pannelli #0F766E */
+    --night: 31 41 55; /* scrim foto/footer (fisso scuro) */
+
+    --teal: 15 118 110; /* #0F766E */
+    --teal-dark: 11 90 84; /* #0B5A54 */
+    --ember: 249 115 22; /* #F97316 */
+    --ember-dark: 234 102 10; /* #EA660A */
+  }
+
+  .dark {
+    --background: 16 21 20; /* #101514 carbone caldo */
+    --surface: 24 31 29; /* #181F1D superfici/card */
+    --foreground: 236 233 224; /* #ECE9E0 off-white caldo */
+    --brand: 13 92 85; /* #0D5C55 teal pannelli (più profondo, AA su bianco) */
+    --night: 8 11 10; /* scrim foto restano scuri */
+
+    --teal: 45 184 167; /* #2DB8A7 accento più chiaro per contrasto su scuro */
+    --teal-dark: 38 160 145; /* #26A091 */
+    --ember: 251 146 60; /* #FB923C ember leggermente più vivo */
+    --ember-dark: 249 115 22; /* #F97316 */
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+}
+
+/* Transizione elegante al cambio tema. :where() ha specificità 0,
+   quindi le utility Tailwind con transizioni proprie hanno la precedenza. */
+:where(*, *::before, *::after) {
+  transition:
+    background-color 0.25s var(--ease-out-expo),
+    border-color 0.25s var(--ease-out-expo),
+    color 0.25s var(--ease-out-expo),
+    fill 0.25s var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-content px-6 sm:px-8 lg:px-10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-teal;
+  }
+
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-px w-7 bg-ember;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ember px-7 py-3.5 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:bg-ember-dark hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-paper/95 px-7 py-3.5 text-sm font-semibold text-ink shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:text-teal;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-teal/25 px-7 py-3.5 text-sm font-semibold text-teal transition-all duration-300 hover:border-teal hover:bg-teal hover:text-white;
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-1.5 text-sm font-semibold text-teal transition-colors duration-200 hover:text-ember;
+  }
+}
+
+/* fade-up on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
